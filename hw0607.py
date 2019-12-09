@@ -36,8 +36,8 @@ def main():
     print(f"Из командной строки мы получили следующие аргументы: {class_parser.show_args()}")
     class_game1 = Game(3, "B", "K")
     class_game2 = Game(4, "B", "S")
-    class_game1.show_parameters()
-    class_game2.show_parameters()
+    class_game1.show_parameters
+    class_game2.show_parameters
     print(f"А эта фукция вернет нам количество цифр, умноженное на три: {class_game1.game_count_triplet()}")
     # class_wordgame = WordGame()
     print(f"Общедоступное свойство класса - digits_public: {class_game1.digits_public}")
@@ -55,8 +55,9 @@ class Gamer():
         self.__counter = 0
         self.__history = dict()
 
+    @property
     def next_move(self):
-        user_number = self.__get_user_number()
+        user_number = self.user_number
         self.__counter += 1
         self.__history[self.__counter] = {"user_number": user_number,
                     "match_result":""}
@@ -65,7 +66,8 @@ class Gamer():
     def set_result(self, result):
         self.__history[self.__counter]["match_result": result]
 
-    def __get_user_number(self):
+    @property
+    def user_number(self):
         user_number =  input("Введите число: ")
         if user_number.isdecimal():
             return user_number
@@ -97,6 +99,7 @@ class Game():
         self.__number = self.__rand_generator(digits)
         # print(self.__number)
 
+    @property
     def show_parameters(self):
         print(f"{self.__class__} Количество цифр в числе: {self.__digits}, знак полного совпадения: {self.__fullmatch}, знак частичного совпадения: {self.__match}, сгенерированное число: {self.__number}")
 
@@ -114,34 +117,37 @@ class Round():
     __gamer = None
 
     def __init__(self):
-        self.__game = Game()
+        self.__game = Game(4, "", "")
         self.__gamer = Gamer()
         self.worker()
 
     def __compare(self, number, user_number):
-        pass
         if number == user_number:
-            print("Полное совпадение")
-            outB, outK = str()
+            print("Вы угадали число")
+            return True
 
-            for i in range(len(number)):
-                for j in range(len(user_number)):
-                    if number[i] == user_number[j]:
-                        if i == j:
-                            outB += "B"
-                            print(outB)
-                        else:
-                            outK += "K"
-                            print(outK)
-        else:
-            print("Размеры введённых чисел не совпадают")
+        if len(number) != len(user_number):
+            print("Рамер чисел не совпадает")
             return False
 
+        outB = str()
+        outK = str()
+
+        for i in range(len(number)):
+	        for j in range(len(user_number)):
+		        if number[i] == user_number[j]:
+			        if i == j:
+				        outB += "B"
+			        else:
+				        outK += "K"
+
+        print(outB + outK)
+        return False
 
     def worker(self):
-        n1 = self.__game.get_number()
+        n1 = self.__game.number
         while True:
-            n2 = self.__gamer.next_move()
+            n2 = self.__gamer.next_move
             won = self.__compare(n1, n2)
             if won:
                 print("Вы победили")
